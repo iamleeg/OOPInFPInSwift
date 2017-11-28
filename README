@@ -1,0 +1,21 @@
+# OOPInFPInSwift
+
+This is a collection of playgrounds in which object-oriented
+programming is built out of functions in Swift. It supplants
+[Objective-Swift](https://github.com/iamleeg/Objective-Swift), which
+was written such a long time ago (two years) that everything is broken
+and horrible. LOL computers.
+
+These playgrounds were made in Xcode 9, so if WWDC 2018 has already
+happened you probably can't use these any more either.
+
+## Usage
+
+Load the playgrounds in Xcode. They have descriptive comments.
+
+## Licence
+
+Unless overridden by a licence grant in the source files, all of the
+sources in this repository are Copyright (C) 2017 Graham Lee and
+licensed to you under the terms of the [MIT
+License](https://opensource.org/licenses/MIT).
