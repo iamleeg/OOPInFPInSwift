@@ -42,3 +42,56 @@ oneTwoThree.count()
 oneTwoThree.at(0)
 oneTwoThree.at(1)
 
+// this is all very well, but imagine that I want to add a new behaviour to my lists, for example the
+// ability to produce a description. I can add that method to the list description:
+
+struct DescribableList<T> {
+    let count: () -> Int
+    let at: (Int) -> T?
+    let describe: () -> String
+}
+
+// but do I really want to go back and change every List I've ever created to make it a describable list?
+// let's look at an alternative: delegation. We'll make a selector table in which the `count` and `at`
+// selectors are _optional_: a DescribableList object can supply those methods, or rely on some other
+// object supplying them, such as an existing list.
+
+struct DescribableListSelectors<T> {
+    let count: (() -> Int)?
+    let at: ((Int) -> T?)?
+    let describe: () -> String
+}
+
+// and a constructor that takes a list instance and adds a description, optionally also overriding
+// the `count` and `at` methods. We don't _need_ to override them, we can _inherit_ them from the list.
+
+func ListSubtypeByAddingDescription<T>(prototype: List<T>,
+                                       overrides: DescribableListSelectors<T>) -> DescribableList<T>
+{
+    let countImplementation: () -> Int = overrides.count ?? prototype.count
+    let atImplementation: (Int) -> T? = overrides.at ?? prototype.at
+    
+    return DescribableList(count: countImplementation,
+                           at: atImplementation,
+                           describe: overrides.describe)
+}
+
+// so to add a description method to a list, we use that list as the prototype
+func ListOfStrings(strings: List<String>) -> DescribableList<String>
+{
+    let describe: () -> String = {
+        var output = ""
+        for i in 0..<strings.count() {
+            output = output.appending(strings.at(i)!)
+            output = output.appending(" ")
+        }
+        return output.trimmingCharacters(in: CharacterSet.whitespaces)
+    }
+    return ListSubtypeByAddingDescription(prototype: strings,
+                                          overrides: DescribableListSelectors(count: nil,
+                                                                              at: nil,
+                                                                              describe: describe))
+}
+
+let greeting = ListOfStrings(strings: LinkedList(head: "Hello,", tail: LinkedList(head: "World!", tail: EmptyList())))
+greeting.describe()
