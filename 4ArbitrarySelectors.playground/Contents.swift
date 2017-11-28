@@ -109,8 +109,8 @@ nil.."intValue"
 // You can build classes out of prototypes, but I'll leave that for you.
 
 // back to the machinery that removes the boilerplate of unboxing all those enums, it could look like this:
-func ℹ︎(receiver:Object?)->Int? {
-    if let imp = receiver.."intValue" {
+func ℹ︎(receiver:Object?, _cmd:Selector)->Int? {
+    if let imp = receiver.._cmd {
         switch(imp) {
         case .asInteger(let f):
             return f()
@@ -122,5 +122,26 @@ func ℹ︎(receiver:Object?)->Int? {
     }
 }
 
-ℹ︎(receiver: theMeaning)!
+ℹ︎(receiver: theMeaning, _cmd: "intValue")
+
+// notice that we're going to need a different function like ℹ︎ for every type in the `IMP` enum, which you
+// won't be used to from other OOP systems. In Smalltalk, Ruby, and similar, everything is an object
+// so the question of "what type is it" doesn't arise. In something like Objective-C, it _does_ arise,
+// and is handled internally (though imperfectly) by the runtime library. In Swift we have to play within
+// its type system so we have to explicitly cope with whatever types we've created.
+
+func 🖨(receiver:Object?, _cmd:Selector)->String? {
+    if let imp = receiver.._cmd {
+        switch(imp) {
+        case .description(let f):
+            return f()
+        default:
+            return nil
+        }
+    } else {
+        return nil
+    }
+}
+
+🖨(receiver: theMeaning, _cmd:"description")
 
