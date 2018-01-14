@@ -16,7 +16,7 @@ universe(12)
 // can decide what is or is not in a Set. We'll create a function that returns sets, and
 // we can configure them by passing parameters to the functions.
 
-func RangeSet(lower: Int, upper: Int) -> MySet<Int>
+func RangeSet(from lower: Int, to upper: Int) -> MySet<Int>
 {
     return { (x) in (x >= lower) && (x <= upper)}
 }
@@ -24,30 +24,31 @@ func RangeSet(lower: Int, upper: Int) -> MySet<Int>
 // notice that instances of RangeSet are implemented as _closures_ over the parameters in
 // the constructor.
 
-let threeFourFive : IntegerSet = RangeSet(lower: 3, upper: 5)
+let threeFourFive : IntegerSet = RangeSet(from: 3, to: 5)
 
 threeFourFive(2)
 threeFourFive(3)
 
-let oneAndTwo : IntegerSet = RangeSet(lower: 1, upper: 2)
+let oneAndTwo : IntegerSet = RangeSet(from: 1, to: 2)
 
 // we can build set definitions out of other sets, too
 // notice here that the two sets escape the constructor, not the instance: we have
 // instance variable encapsulation
-func UnionSet<T>(left: @escaping MySet<T>, right: @escaping MySet<T>) -> MySet<T>
+func UnionSet<T>(of left: @escaping MySet<T>,
+                 and right: @escaping MySet<T>) -> MySet<T>
 {
     return { (x) in (left(x) || right(x))}
 }
 
-let oneToFive : IntegerSet = UnionSet(left: oneAndTwo, right: threeFourFive)
+let oneToFive : IntegerSet = UnionSet(of: oneAndTwo, and: threeFourFive)
 
 oneToFive(0)
 oneToFive(6)
 oneToFive(2)
 
-let twoToFour : IntegerSet = RangeSet(lower: 2, upper: 4)
+let twoToFour : IntegerSet = RangeSet(from: 2, to: 4)
 
-func IntersectionSet<T>(left: @escaping MySet<T>, right: @escaping MySet<T>) -> MySet<T>
+func IntersectionSet<T>(of left: @escaping MySet<T>, and right: @escaping MySet<T>) -> MySet<T>
 {
     return { (x) in (left(x) && right(x)) }
 }
@@ -55,7 +56,7 @@ func IntersectionSet<T>(left: @escaping MySet<T>, right: @escaping MySet<T>) -> 
 // because our sets are all the same type but respond in the same way, we can use
 // different "types" of sets anywhere a set is expected.
 // This is polymorphism.
-let intersectional = IntersectionSet(left: oneToFive, right: twoToFour)
+let intersectional = IntersectionSet(of: oneToFive, and: twoToFour)
 
 intersectional(2)
 intersectional(1)
