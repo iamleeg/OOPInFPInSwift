@@ -16,7 +16,7 @@ universe(12)
 // can decide what is or is not in a Set. We'll create a function that returns sets, and
 // we can configure them by passing parameters to the functions.
 
-func RangeSet(from lower: Int, to upper: Int) -> MySet<Int>
+func RangeSet<T: Comparable>(from lower: T, to upper: T) -> MySet<T>
 {
     return { (x) in (x >= lower) && (x <= upper)}
 }
